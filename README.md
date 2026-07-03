@@ -8,6 +8,40 @@ A fully functional 8-bit CPU built from scratch in Verilog HDL. Features ALU (8 
 
 ---
 
+## 📑 Index
+
+- [📌 Project Highlights](#-project-highlights)
+- [🧠 How This Computer Works](#-how-this-computer-works)
+  - [The Fetch–Execute Cycle](#the-fetchexecute-cycle)
+  - [The Shared Bus](#the-shared-bus)
+- [📁 File Structure](#-file-structure)
+- [📁 Additional Project Files](#-additional-project-files)
+- [📂 Module Details](#-module-details)
+  - [ALU_8Bit.v — Arithmetic Logic Unit](#alu_8bitv--arithmetic-logic-unit)
+  - [Reg_A.v — General Purpose Register A](#reg_av--general-purpose-register-a)
+  - [Reg_B.v — General Purpose Register B](#reg_bv--general-purpose-register-b)
+  - [output_Reg.v — Output Display Register](#output_regv--output-display-register)
+  - [MAR.v — Memory Address Register](#marv--memory-address-register)
+  - [PC.v — Program Counter](#pcv--program-counter)
+  - [RAM.v — Random Access Memory](#ramv--random-access-memory)
+  - [IR.v — Instruction Register](#irv--instruction-register)
+  - [CPU.v — Top-Level Integration Module](#cpuv--top-level-integration-module)
+  - [tb_CPU.v — Testbench](#tb_cpuv--testbench)
+- [⚙️ How to Run the Simulation](#️-how-to-run-the-simulation)
+  - [Requirements](#requirements)
+  - [🐧 Ubuntu / Debian — Install](#-ubuntu--debian--install)
+  - [🍎 macOS (Homebrew) — Install](#-macos-homebrew--install)
+  - [🪟 Windows — Download & Install](#-windows--download--install)
+  - [Step 1 — Compile all source files](#step-1--compile-all-source-files)
+  - [Step 2 — Run the simulation](#step-2--run-the-simulation)
+  - [Step 3 — View the waveform in GTKWave](#step-3--view-the-waveform-in-gtkwave)
+- [🔑 Key Design Decisions](#-key-design-decisions)
+- [📊 Resource Summary](#-resource-summary)
+- [👤 Author](#-author)
+- [📄 License](#-license)
+
+---
+
 ## 📌 Project Highlights
 
 - ✅ Complete 8-bit datapath from scratch
@@ -64,6 +98,50 @@ The control rule is simple and critical: **never assert two bus-driving enables 
 ├── CPU.v
 └── tb_CPU.v
 ```
+
+---
+
+## 📁 Additional Project Files
+
+Alongside the core modules and top-level testbench, this repo also includes standalone per-module testbenches (for isolated unit-level verification) and supporting simulation artifacts:
+
+```
+8bit-cpu/
+├── tb_ALU.v
+├── tb_outputreg.v
+├── tb_RegA.v
+├── tb_RegB.v
+├── tb_ir.v
+├── tb_pc.v
+├── tb_mar.v
+├── tb_Ram.v
+├── schematic.png
+├── dump.vcd
+└── io_wave.pdf
+```
+
+**File descriptions:**
+
+| File | Description |
+|------|--------------|
+| `tb_ALU.v` | Standalone testbench for `ALU_8Bit.v` — exercises all 8 opcodes and carry/borrow behavior in isolation |
+| `tb_outputreg.v` | Standalone testbench for `output_Reg.v` — verifies load/enable and high-impedance display-off behavior |
+| `tb_RegA.v` | Standalone testbench for `Reg_A.v` — verifies bus load and drive behavior |
+| `tb_RegB.v` | Standalone testbench for `Reg_B.v` — verifies bus load and drive behavior |
+| `tb_ir.v` | Standalone testbench for `IR.v` — verifies instruction capture on the bus |
+| `tb_pc.v` | Standalone testbench for `PC.v` — verifies counting, jump, preset, and wraparound |
+| `tb_mar.v` | Standalone testbench for `MAR.v` — verifies address latching from the external DIP input |
+| `tb_Ram.v` | Standalone testbench for `RAM.v` — verifies combinational reads and PC/MAR-addressed writes |
+| `schematic.png` | Visual schematic of the full CPU datapath and shared bus wiring |
+| `dump.vcd` | Waveform dump generated after running any testbench, viewable in GTKWave |
+| `io_wave.pdf` | Exported waveform view (PDF) showing key signal transitions for reference without opening GTKWave |
+
+> Each per-module testbench (`tb_<module>.v`) can be compiled and run the same way as `tb_CPU.v` — just swap in the relevant testbench and module file, e.g.:
+> ```bash
+> iverilog -o tb_ALU.out tb_ALU.v ALU_8Bit.v
+> vvp tb_ALU.out
+> gtkwave dump.vcd
+> ```
 
 ---
 
@@ -318,37 +396,52 @@ A comprehensive simulation testbench that exercises the full CPU datapath. It dr
 - [Icarus Verilog](http://iverilog.icarus.com/) (`iverilog`) — free, open-source Verilog simulator
 - [GTKWave](http://gtkwave.sourceforge.net/) — free waveform viewer
 
-**Install on Ubuntu/Debian:**
+---
+
+### 🐧 Ubuntu / Debian — Install
+
 ```bash
+sudo apt-get update
 sudo apt-get install iverilog gtkwave
 ```
 
-**Install on macOS (Homebrew):**
+---
+
+### 🍎 macOS (Homebrew) — Install
+
 ```bash
 brew install icarus-verilog gtkwave
 ```
 
-**Install on Windows:**
-Download and install from the official websites above, or use WSL (Windows Subsystem for Linux) and follow the Ubuntu instructions.
+---
+
+### 🪟 Windows — Download & Install
+
+- Icarus Verilog installer: [http://bleyer.org/icarus/](http://bleyer.org/icarus/) — download the latest `iverilog-vX.X-X-setup.exe` and install (this bundles both `iverilog` and `vvp`)
+- GTKWave: bundled with the same Icarus Verilog Windows installer, or standalone from [https://sourceforge.net/projects/gtkwave/](https://sourceforge.net/projects/gtkwave/)
+
+During installation, make sure to check the option to **add Icarus Verilog to your PATH** so the commands below work from any Command Prompt / PowerShell window.
+
+> Alternatively, install [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) and simply follow the Ubuntu/Debian instructions above inside your WSL terminal.
 
 ---
 
 ### Step 1 — Compile all source files
 
-Place all `.v` files in the same directory. Then compile the testbench together with all modules:
+Place all `.v` files in the same directory. Then compile the testbench together with all modules (same command on Ubuntu, macOS, and Windows):
 
 ```bash
-iverilog -o cpu_sim tb_CPU.v CPU.v ALU_8Bit.v Reg_A.v Reg_B.v output_Reg.v MAR.v PC.v RAM.v IR.v
+iverilog -o tb_CPU.out tb_CPU.v CPU.v ALU_8Bit.v Reg_A.v Reg_B.v output_Reg.v MAR.v PC.v RAM.v IR.v
 ```
 
-This produces a compiled simulation binary called `cpu_sim`.
+This produces a compiled simulation binary called `tb_CPU.out`.
 
 ---
 
 ### Step 2 — Run the simulation
 
 ```bash
-vvp cpu_sim
+vvp tb_CPU.out
 ```
 
 This runs the simulation. You will see the `$monitor` output printed line by line in your terminal, showing every signal value at every timestep where something changes. A `dump.vcd` waveform file is also generated automatically.
