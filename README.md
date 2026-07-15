@@ -142,10 +142,10 @@ The control rule is simple and critical: **never assert two bus-driving enables 
 ├── IR.v                     ← Instruction Register
 ├── CPU.v                    ← Top-level integration
 ├── tb_CPU.v                 ← Full CPU testbench
-├── tb_ALU.v            ← ALU testbench
-├── tb_RegA.v               ← Reg A testbench
-├── tb_RegB.v               ← Reg B testbench
-├── tb_outputreg.v          ← Output register testbench
+├── tb_ALU.v                 ← ALU testbench
+├── tb_RegA.v                ← Reg A testbench
+├── tb_RegB.v                ← Reg B testbench
+├── tb_outputreg.v           ← Output register testbench
 ├── tb_mar.v                 ← MAR testbench
 ├── tb_pc.v                  ← PC testbench
 ├── tb_Ram.v                 ← RAM testbench
