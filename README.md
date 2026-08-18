@@ -6,7 +6,7 @@ A fully functional 8-bit CPU built from scratch in Verilog HDL. Features ALU (8 
 
 > A fully functional 8-bit processor designed and implemented in Verilog HDL, featuring a complete datapath with ALU, register file, RAM, program counter, memory address register, instruction register, and output display — all connected through a shared tri-stated bus architecture.
 
---- 
+---  
 
 ## 📌 Project Highlights
 
