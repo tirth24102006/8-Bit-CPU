@@ -8,7 +8,7 @@ A fully functional 8-bit CPU built from scratch in Verilog HDL. Features ALU (8 
   
 ---  
  
-## 📌 Project Highlights
+## 📌 Project Highlights 
 
 - ✅ Complete 8-bit datapath from scratch in Verilog HDL
 - ✅ Shared tri-stated bus architecture (no bus conflicts)
